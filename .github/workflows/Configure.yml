@@ -1,0 +1,43 @@
+title: Truist Bank Credit Union
+description: A modern online banking simulation with dashboard and admin panel
+baseurl: "" # leave empty for GitHub Pages root
+url: "https://yourusername.github.io" # replace with your username
+theme: minima  # or another Jekyll theme
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ page.title }} | {{ site.title }}</title>
+  <link rel="stylesheet" href="{{ '/assets/css/styles.css' | relative_url }}">
+  {% seo %}
+</head>
+<body>
+  {% include header.html %}
+
+  <main class="container">
+    {{ content }}
+  </main>
+
+  {% include footer.html %}
+  <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+</body>
+</html>
+---
+layout: default
+title: Register
+---
+
+# Create an Account
+<form action="dashboard.html" method="post">
+  <label>Full Name</label>
+  <input type="text" required>
+  <label>Email</label>
+  <input type="email" required>
+  <label>Password</label>
+  <input type="password" required>
+  <label>Confirm Password</label>
+  <input type="password" required>
+  <button type="submit" class="btn">Register</button>
+</form>

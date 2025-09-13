@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Register — Truist Bank Credit Union</title>
+
+<style>
+  /* Base reset & fonts */
+  * { box-sizing: border-box; margin:0; padding:0; }
+  html,body{ height:100%; }
+  body {
+    font-family: "Inter", "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+    background: linear-gradient(180deg,#f5f7fb 0%, #eef3fb 100%);
+    color: #111827;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.45;
+  }
+
+  /* Header */
+  .site-header{
+    background: linear-gradient(90deg,#072b66 0%, #0d3e8a 100%);
+    color: #fff;
+    padding: 18px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+  }
+  .brand { display:flex; align-items:center; gap:12px; }
+  .logo {
+    width:46px; height:46px; display:flex; align-items:center; justify-content:center;
+    background: #fff; color:#0a3d91; border-radius:8px; font-weight:700;
+    font-size:16px; box-shadow: 0 4px 12px rgba(2,9,44,0.12);
+  }
+  .brand .title { font-size:18px; font-weight:700; letter-spacing:0.2px; }
+  nav.primary { display:flex; gap:18px; align-items:center; }
+  nav.primary a { color: rgba(255,255,255,0.95); text-decoration:none; font-weight:600; font-size:14px; opacity:0.95; }
+  .cta-group { display:flex; gap:10px; align-items:center; }
+
+  .btn { padding:10px 14px; border-radius:8px; font-weight:700; font-size:14px; cursor:pointer; border:0; }
+  .btn-ghost { background:transparent; color:#fff; border:1px solid rgba(255,255,255,0.12); }
+  .btn-primary { background:#ffd400; color:#072b66; box-shadow:0 6px 14px rgba(2,9,44,0.12); }
+
+  /* Container */
+  .container { width:100%; max-width:1100px; margin:28px auto; padding:0 20px; }
+
+  /* Page layout */
+  .page-grid { display:grid; grid-template-columns: 1fr 420px; gap:24px; align-items:start; }
+  @media(max-width:980px){ .page-grid { grid-template-columns: 1fr; } }
+
+  /* Left panel - info */
+  .left-panel {
+    background: linear-gradient(180deg, rgba(10,61,145,0.04), rgba(10,61,145,0.01));
+    border-radius:14px; padding:24px; box-shadow: 0 8px 24px rgba(6,30,78,0.04);
+  }
+  .left-panel h1 { color:#072b66; font-size:24px; margin-bottom:8px; }
+  .left-panel p.lead { color:#374151; margin-bottom:14px; font-size:15px; }
+  .news {
+    margin-top:12px; display:inline-block; background:#fff; padding:10px 12px; border-radius:10px;
+    box-shadow: 0 4px 12px rgba(2,9,44,0.04); font-weight:600;
+  }
+
+  /* Right panel - form */
+  .card {
+    background:#fff; border-radius:12px; padding:20px; box-shadow: 0 10px 30px rgba(10,61,145,0.06);
+  }
+  form h2 { color:#072b66; margin-bottom:10px; font-size:20px; }
+  form p.sub { color:#475569; margin-bottom:16px; font-size:14px; }
+
+  .form-row { display:flex; gap:12px; }
+  .form-field { margin-bottom:12px; width:100%; }
+  label { display:block; font-size:13px; color:#475569; margin-bottom:6px; font-weight:600; }
+  input[type="text"], input[type="email"], input[type="password"] {
+    width:100%; padding:12px 14px; border-radius:10px; border:1px solid #e6eefc;
+    font-size:14px; outline:none;
+  }
+  input:focus { box-shadow: 0 8px 20px rgba(10,61,145,0.06); border-color:#bcd3ff; }
+
+  .helper { font-size:13px; color:#6b7280; margin-top:6px; }
+
+  .pw-match { font-size:13px; margin-top:6px; font-weight:700; }
+  .pw-match.ok { color: #16a34a; }
+  .pw-match.bad { color: #e11d48; }
+
+  .btn-block { display:block; width:100%; margin-top:6px; }
+
+  .small-note { font-size:13px; color:#64748b; margin-top:10px; }
+
+  /* Footer */
+  footer.site-footer {
+    margin-top:20px; background:#072b66; color:#fff; padding:14px; border-radius:10px;
+    display:flex; justify-content:space-between; align-items:center; gap:12px; font-size:14px;
+  }
+  footer a { color:#ffd400; text-decoration:none; font-weight:700; }
+
+  /* Help floating */
+  .help-float {
+    position:fixed; right:18px; bottom:80px; width:62px; height:62px; border-radius:50%;
+    background:linear-gradient(180deg,#ffd400,#ffcf36); display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 12px 30px rgba(2,9,44,0.18); cursor:pointer; z-index:999;
+  }
+  .help-float svg{ width:30px; height:30px; }
+
+  /* success toast */
+  .toast {
+    position:fixed; left:50%; transform:translateX(-50%); bottom:160px;
+    background:#0a3d91; color:white; padding:12px 18px; border-radius:10px; box-shadow:0 10px 30px rgba(2,9,44,0.2);
+    display:none; z-index:1000; font-weight:700;
+  }
+
+</style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="brand" aria-hidden="false">
+      <div class="logo" aria-hidden="true">TB</div>
+      <div>
+        <div class="title">Truist Bank Credit Union</div>
+        <div style="font-size:12px;opacity:0.85">Secure · Local · Reliable</div>
+      </div>
+    </div>
+
+    <nav class="primary" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="register.html" style="text-decoration:underline">Register</a>
+      <a href="login.html">Login</a>
+      <a href="#support">Support</a>
+    </nav>
+
+    <div class="cta-group">
+      <a class="btn btn-ghost" href="login.html">Sign in</a>
+      <a class="btn btn-primary" href="register.html">Open an Account</a>
+    </div>
+  </header>
+
+  <!-- Container -->
+  <main class="container" role="main">
+
+    <div class="page-grid">
+
+      <!-- left informational panel -->
+      <section class="left-panel" aria-labelledby="reg-hero">
+        <h1 id="reg-hero">Open your Truist Bank Credit Union account</h1>
+        <p class="lead">Create a secure checking & savings account and get online banking access. Opening an account is fast and secure — enjoy local support and modern features.</p>
+
+        <div class="news" id="live-news">Loading latest updates…</div>
+
+        <hr style="margin:16px 0; border:none; border-top:1px solid #eef3fb" />
+
+        <div style="display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap">
+          <div style="flex:1; min-width:220px;">
+            <h4 style="color:#072b66; margin-bottom:8px">Why Truist Bank CU?</h4>
+            <ul style="color:#475569; margin-left:16px; line-height:1.6">
+              <li>FDIC-equivalent protections</li>
+              <li>24/7 online banking & transfers</li>
+              <li>Fast WhatsApp customer support</li>
+            </ul>
+          </div>
+          <div style="flex:1; min-width:200px;">
+            <h4 style="color:#072b66; margin-bottom:8px">What you need</h4>
+            <p style="color:#475569; font-size:14px">Full name, a valid email, and a secure password. We'll assign your account and routing numbers automatically.</p>
+          </div>
+        </div>
+
+        <p class="small-note">By creating an account you agree to our <a href="#" style="color:#072b66; text-decoration:underline">Terms & Privacy</a>.</p>
+      </section>
+
+      <!-- right form panel -->
+      <aside class="card" aria-labelledby="register-title">
+        <form id="registerForm" novalidate autocomplete="off">
+          <h2 id="register-title">Create an Account</h2>
+          <p class="sub">Join Truist Bank Credit Union — set up checking, savings, and online access.</p>
+
+          <div class="form-field">
+            <label for="fullName">Full name</label>
+            <input id="fullName" type="text" placeholder="Jane Alexandra Doe" required />
+          </div>
+
+          <div class="form-field">
+            <label for="email">Email address</label>
+            <input id="email" type="email" placeholder="you@example.com" required />
+            <div class="helper">We'll send verification and account info to this email (demo).</div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field" style="flex:1">
+              <label for="password">Password</label>
+              <input id="password" type="password" placeholder="Create a secure password" minlength="6" required />
+            </div>
+            <div class="form-field" style="flex:1">
+              <label for="confirmPassword">Confirm password</label>
+              <input id="confirmPassword" type="password" placeholder="Confirm password" minlength="6" required />
+            </div>
+          </div>
+
+          <div id="pwFeedback" class="pw-match" aria-live="polite"></div>
+
+          <div style="display:flex; gap:10px; align-items:center; margin-top:8px;">
+            <input id="agree" type="checkbox" style="width:18px;height:18px" />
+            <label for="agree" style="font-size:13px;color:#475569">I agree to the Terms & Privacy</label>
+          </div>
+
+          <button id="submitBtn" class="btn btn-primary btn-block" type="submit" style="margin-top:14px">Create account</button>
+
+          <p style="margin-top:12px; font-size:14px; text-align:center">Already registered? <a href="login.html">Sign in</a></p>
+        </form>
+
+        <div style="margin-top:16px; font-size:13px; color:#64748b;">
+          <strong>Need help?</strong> Use the floating help button for WhatsApp or email support.
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- footer -->
+  <footer class="site-footer" id="support">
+    <div>
+      <strong>Customer Support</strong><br />
+      WhatsApp: <a href="https://wa.me/18623899696" target="_blank" rel="noopener">+1 862-389-9696</a> |
+      Email: <a href="mailto:truistbank542@gmail.com">truistbank542@gmail.com</a>
+    </div>
+    <div style="opacity:0.95">© <span id="year"></span> Truist Bank Credit Union</div>
+  </footer>
+
+  <!-- help floating -->
+  <div class="help-float" id="helpIcon" title="Get help">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" fill="#072b66"/>
+    </svg>
+  </div>
+
+  <!-- toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  // set year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // live news ticker
+  const news = [
+    "Now offering free debit cards for new accounts.",
+    "WhatsApp support available 24/7 at +1 862-389-9696.",
+    "Secure transfers and instant notifications.",
+    "New: enhanced savings boosters — learn more in dashboard."
+  ];
+  const newsBox = document.getElementById('live-news');
+  let n=0;
+  newsBox.textContent = news[n];
+  setInterval(()=> { n=(n+1)%news.length; newsBox.textContent = news[n]; }, 5000);
+
+  // password match inline feedback
+  const pw = document.getElementById('password');
+  const pwc = document.getElementById('confirmPassword');
+  const feedback = document.getElementById('pwFeedback');
+
+  function checkPw(){
+    const a = pw.value;
+    const b = pwc.value;
+    if(!a && !b){ feedback.textContent=''; feedback.className='pw-match'; return; }
+    if(a.length < 6){
+      feedback.textContent = 'Password too short (min 6 chars)';
+      feedback.className = 'pw-match bad';
+      return;
+    }
+    if(a === b){
+      feedback.textContent = 'Passwords match ✓';
+      feedback.className = 'pw-match ok';
+    } else {
+      feedback.textContent = 'Passwords do not match';
+      feedback.className = 'pw-match bad';
+    }
+  }
+  pw.addEventListener('input', checkPw);
+  pwc.addEventListener('input', checkPw);
+
+  // help floating button
+  document.getElementById('helpIcon').addEventListener('click', ()=>{
+    const helpText = "Customer support\n\nWhatsApp: +1 862-389-9696\nEmail: truistbank542@gmail.com\n\nWe reply quickly on WhatsApp.";
+    alert(helpText);
+  });
+
+  // toast helper
+  function showToast(msg, timeout=2600){
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.style.display='block';
+    setTimeout(()=> { t.style.display='none'; }, timeout);
+  }
+
+  // registration submit
+  document.getElementById('registerForm').addEventListener('submit', function(e){
+    e.preventDefault();
+
+    const name = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim().toLowerCase();
+    const password = pw.value;
+    const confirm = pwc.value;
+    const agree = document.getElementById('agree').checked;
+
+    // basic validations
+    if(!name || !email || !password || !confirm){
+      return alert("Please fill all fields.");
+    }
+    if(password !== confirm){
+      return alert("Passwords do not match.");
+    }
+    if(password.length < 6){
+      return alert("Password must be at least 6 characters.");
+    }
+    if(!agree){
+      return alert("Please agree to Terms & Privacy.");
+    }
+
+    // users array & accounts structure (used by dashboard/admin)
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    if(users.some(u => u.email === email)){
+      return alert("That email is already registered. Try logging in.");
+    }
+
+    // create realistic numbers
+    const accountNumber = "4" + Math.floor(100000000 + Math.random()*900000000);
+    const routingNumber = "026009593"; // consistent with dashboard examples
+
+    // save user (minimal credential)
+    users.push({ name, email, pass: password, accountNumber, routingNumber });
+    localStorage.setItem('users', JSON.stringify(users));
+
+    // ensure accounts object exists for dashboard and admin
+    const accounts = JSON.parse(localStorage.getItem('accounts') || '{}');
+    accounts[email] = {
+      checking: 0,
+      savings: 0,
+      transactions: [],
+      accountNumber,
+      routingNumber,
+      frozen: false
+    };
+    localStorage.setItem('accounts', JSON.stringify(accounts));
+
+    // mark new user (welcome shows on index/dashboard)
+    localStorage.setItem('newUser', name);
+    // set currentUser so dashboard opens as logged in
+    localStorage.setItem('currentUser', email);
+
+    // friendly UI response
+    showToast("Account created ✓ Redirecting to your dashboard...", 2200);
+    setTimeout(()=> {
+      window.location.href = "dashboard.html";
+    }, 1200);
+  });
+
+})();
+</script>
+
+</body>
+</html>

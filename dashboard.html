@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Truist Bank Credit Union - Dashboard</title>
+<style>
+/* Reset */
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI', sans-serif; background:#f5f7fa; color:#333; }
+
+/* Header */
+header {
+    background: #0a3d91;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+header img { height: 35px; }
+header button {
+    background: #e63946;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+}
+
+/* Layout */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 20px;
+}
+.main-area {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.center-cards {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 20px;
+}
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+.card:hover { transform: translateY(-3px); }
+.card h2 { color:#0a3d91; margin-bottom: 10px; }
+.balance { font-size: 1.5rem; font-weight: bold; color:#0a3d91; }
+
+/* Inputs & Buttons */
+input, select {
+    width: 100%; padding: 10px; margin-top: 6px; margin-bottom: 12px;
+    border-radius: 6px; border: 1px solid #ccc; outline: none;
+}
+button.action-btn {
+    width: 100%; padding: 12px;
+    border: none; border-radius: 6px;
+    font-weight: bold; font-size: 1rem;
+    cursor: pointer; transition: 0.2s;
+}
+.send-btn { background: #f4a261; color:white; }
+.send-btn:hover { background:#e07a34; }
+.debit-btn { background:#0a3d91; color:white; }
+.debit-btn:hover { background:#062d6a; }
+.withdraw-btn { background:#2a9d8f; color:white; }
+.withdraw-btn:hover { background:#1e7a6c; }
+
+/* Transactions */
+.transaction-list { max-height:200px; overflow-y:auto; }
+.transaction-item {
+    display:flex; justify-content:space-between;
+    padding:8px 0; border-bottom:1px solid #eee; font-size:0.95rem;
+}
+.transaction-item.credit { color:green; }
+.transaction-item.debit { color:red; }
+
+/* Mobile */
+@media(max-width:992px){
+    .dashboard-container { grid-template-columns:1fr; }
+    .center-cards { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/U.S._Bank_logo.svg/2560px-U.S._Bank_logo.svg.png" alt="US Bank Logo">
+    <button onclick="logout()">Logout</button>
+</header>
+
+<div class="dashboard-container">
+
+    <!-- Main Area -->
+    <div class="main-area">
+        
+        <!-- Center 3 Cards -->
+        <div class="center-cards">
+            <div class="card">
+                <h2>Checking Account</h2>
+                <p class="balance">$<span id="checkingBalance">0.00</span></p>
+            </div>
+            <div class="card">
+                <h2>Savings Account</h2>
+                <p class="balance">$<span id="savingsBalance">0.00</span></p>
+            </div>
+            <div class="card">
+                <h2>Online Banking</h2>
+                <p class="balance">Active</p>
+            </div>
+        </div>
+
+        <!-- Withdraw Money -->
+        <div class="card">
+            <h2>Withdraw Money</h2>
+            <input type="number" id="withdrawAmount" placeholder="Enter amount">
+            <button class="action-btn withdraw-btn" id="withdrawBtn">Withdraw</button>
+        </div>
+
+        <!-- Transaction History -->
+        <div class="card">
+            <h2>Transaction History</h2>
+            <div class="transaction-list" id="transactionList"></div>
+        </div>
+
+        <!-- Account Info -->
+        <div class="card">
+            <h2>Account Info</h2>
+            <p>Account Number: <span id="accountNumber"></span></p>
+            <p>Routing Number: <span id="routingNumber">026009593</span></p>
+        </div>
+
+        <!-- Debit Card -->
+        <div class="card">
+            <h2>Apply for Debit Card</h2>
+            <button class="action-btn debit-btn" onclick="alert('✅ Your Debit Card request is submitted!')">Apply Now</button>
+        </div>
+
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="card">
+        <h2>Transfer Funds</h2>
+        <label for="transferType">Transfer Type</label>
+        <select id="transferType">
+            <option value="local">Local Transfer</option>
+            <option value="international">International Transfer</option>
+        </select>
+
+        <label for="recipientName">Recipient Full Name</label>
+        <input type="text" id="recipientName" placeholder="e.g. John Doe">
+
+        <label for="recipientAcc">Recipient Account Number</label>
+        <input type="text" id="recipientAcc" placeholder="e.g. 1234567890">
+
+        <label for="recipientBank">Recipient Bank</label>
+        <input type="text" id="recipientBank" placeholder="e.g. Bank of America">
+
+        <label for="sendAmount">Amount</label>
+        <input type="number" id="sendAmount" placeholder="Enter amount">
+
+        <label for="transferNote">Note</label>
+        <input type="text" id="transferNote" placeholder="Payment note (optional)">
+
+        <button class="action-btn send-btn" id="transferBtn">Send Money</button>
+    </div>
+
+</div>
+
+<script>
+// JS Logic
+let currentUser = localStorage.getItem('currentUser');
+if(!currentUser){
+    currentUser = prompt("Enter your email to login:");
+    if(!currentUser) alert("Login required");
+    localStorage.setItem('currentUser', currentUser);
+}
+
+let accounts = JSON.parse(localStorage.getItem('accounts') || '{}');
+if(!accounts[currentUser]){
+    const accNum = Math.floor(100000000 + Math.random()*900000000);
+    accounts[currentUser] = { checking:1000, savings:500, transactions:[], accountNumber:accNum };
+    localStorage.setItem('accounts', JSON.stringify(accounts));
+}
+document.getElementById('accountNumber').textContent = accounts[currentUser].accountNumber;
+
+function updateDashboard(){
+    const acc = accounts[currentUser];
+    document.getElementById('checkingBalance').textContent = acc.checking.toFixed(2);
+    document.getElementById('savingsBalance').textContent = acc.savings.toFixed(2);
+
+    const list = document.getElementById('transactionList');
+    list.innerHTML = '';
+    acc.transactions.slice().reverse().forEach(t=>{
+        const div = document.createElement('div');
+        div.className = `transaction-item ${t.type}`;
+        div.innerHTML = `<span>${t.description}</span><span>${t.type==='credit'?'+':'-'}$${t.amount.toFixed(2)}</span>`;
+        list.appendChild(div);
+    });
+}
+updateDashboard();
+
+// Transfer Funds
+document.getElementById('transferBtn').addEventListener('click', ()=>{
+    const type = document.getElementById('transferType').value;
+    const name = document.getElementById('recipientName').value.trim();
+    const acc = document.getElementById('recipientAcc').value.trim();
+    const bank = document.getElementById('recipientBank').value.trim();
+    const amount = parseFloat(document.getElementById('sendAmount').value);
+    const note = document.getElementById('transferNote').value.trim();
+
+    if(!name || !acc || !bank || isNaN(amount) || amount<=0){
+        return alert("⚠️ Please fill all fields correctly.");
+    }
+    if(accounts[currentUser].checking < amount){
+        return alert("❌ Insufficient funds.");
+    }
+
+    // Deduct from sender
+    accounts[currentUser].checking -= amount;
+    accounts[currentUser].transactions.push({
+        type:'debit',
+        description:`${type==='local'?'Local':'Intl'} transfer to ${name} (${bank})`,
+        amount
+    });
+
+    // Add to recipient (simulate)
+    if(!accounts[acc]){
+        accounts[acc] = { checking:0, savings:0, transactions:[], accountNumber:acc };
+    }
+    accounts[acc].checking += amount;
+    accounts[acc].transactions.push({
+        type:'credit',
+        description:`${type==='local'?'Local':'Intl'} transfer received from ${currentUser}`,
+        amount
+    });
+
+    localStorage.setItem('accounts', JSON.stringify(accounts));
+    updateDashboard();
+
+    alert(`✅ You have successfully sent $${amount.toFixed(2)} to ${name} at ${bank}.`);
+});
+
+// Withdraw
+document.getElementById('withdrawBtn').addEventListener('click', ()=>{
+    const amount = parseFloat(document.getElementById('withdrawAmount').value);
+    if(isNaN(amount) || amount<=0) return alert("⚠️ Invalid amount");
+    if(accounts[currentUser].checking < amount) return alert("❌ Insufficient funds");
+
+    accounts[currentUser].checking -= amount;
+    accounts[currentUser].transactions.push({ type:'debit', description:'Withdrawal', amount });
+
+    localStorage.setItem('accounts', JSON.stringify(accounts));
+    updateDashboard();
+    alert(`💵 You have successfully withdrawn $${amount.toFixed(2)}.`);
+});
+
+function logout(){
+    localStorage.removeItem('currentUser');
+    location.reload();
+}
+</script>
+</body>
+</html>

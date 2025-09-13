@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Truist Bank Credit Union — Home</title>
+<link rel="shortcut icon" href="#" />
+<style>
+  /* Base reset */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html,body{ height:100%; }
+  body {
+    font-family: "Inter", "Segoe UI", Roboto, system-ui, -apple-system, "Helvetica Neue", Arial;
+    background: linear-gradient(180deg,#f5f7fb 0%, #eef3fb 100%);
+    color: #1f2937;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.45;
+  }
+
+  /* Header */
+  .site-header{
+    background: linear-gradient(90deg,#072b66 0%, #0d3e8a 100%);
+    color: #fff;
+    padding: 18px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+  }
+  .brand {
+    display:flex; align-items:center; gap:12px;
+  }
+  .brand .logo {
+    width:46px; height:46px; display:flex; align-items:center; justify-content:center;
+    background: #fff; color:#0a3d91; border-radius:8px; font-weight:700;
+    font-size:16px; box-shadow: 0 4px 12px rgba(2,9,44,0.12);
+  }
+  .brand .title {
+    font-size:18px; font-weight:700; letter-spacing:0.2px;
+  }
+  nav.primary {
+    display:flex; gap:18px; align-items:center;
+  }
+  nav.primary a {
+    color: rgba(255,255,255,0.95); text-decoration:none; font-weight:600; font-size:14px;
+  }
+  .cta-group { display:flex; gap:10px; align-items:center; }
+  .btn {
+    padding:10px 14px; border-radius:8px; font-weight:700; font-size:14px; cursor:pointer; border:0;
+  }
+  .btn-ghost { background:transparent; color:#fff; border:1px solid rgba(255,255,255,0.12); }
+  .btn-primary { background:#ffd400; color:#072b66; box-shadow:0 6px 14px rgba(2,9,44,0.12); }
+
+  /* Layout */
+  .container {
+    width:100%; max-width:1180px; margin:28px auto; padding:0 20px;
+  }
+
+  /* Hero */
+  .hero {
+    display:flex; gap:28px; align-items:center; justify-content:space-between;
+    background: linear-gradient(180deg, rgba(10,61,145,0.06), rgba(10,61,145,0.02));
+    border-radius:14px; padding:28px; box-shadow: 0 8px 24px rgba(6,30,78,0.04);
+  }
+  .hero-left { flex:1 1 60%; min-width: 260px; }
+  .hero h1 { color:#072b66; font-size:28px; margin-bottom:10px; }
+  .hero p.lead { color:#374151; margin-bottom:14px; font-size:15px; }
+  .hero .actions { display:flex; gap:12px; margin-top:6px; }
+  .news-ticker {
+    margin-top:14px; display:inline-block; background:#fff; padding:10px 12px; border-radius:10px;
+    box-shadow: 0 4px 12px rgba(2,9,44,0.04); font-weight:600;
+  }
+
+  .hero-right {
+    width:320px; background:#fff; border-radius:12px; padding:16px;
+    box-shadow: 0 10px 30px rgba(10,61,145,0.06);
+  }
+  .hero-right h3 { color:#072b66; margin-bottom:8px; font-size:16px; }
+  .mini-field { width:100%; margin-bottom:10px; }
+  .mini-field input, .mini-field select {
+    width:100%; padding:10px; border-radius:8px; border:1px solid #e6eefc;
+    outline:none; font-size:14px;
+  }
+  .mini-field input:focus { box-shadow: 0 6px 18px rgba(10,61,145,0.06); border-color:#bcd3ff; }
+
+  /* 3 Center Cards */
+  .features {
+    display:flex; gap:18px; margin-top:22px; justify-content:center; flex-wrap:wrap;
+  }
+  .feature-card {
+    flex:1 1 260px; max-width: 360px;
+    background:#fff; border-radius:12px; padding:18px; text-align:left;
+    box-shadow: 0 8px 24px rgba(5,20,60,0.04);
+  }
+  .feature-card h4 { color:#072b66; margin-bottom:8px; font-size:16px; }
+  .feature-card p { color:#475569; font-size:14px; margin-bottom:12px; }
+
+  /* Footer */
+  footer.site-footer {
+    margin-top:36px; background:#072b66; color:#fff; padding:18px; border-radius:10px;
+    display:flex; justify-content:space-between; align-items:center; gap:12px;
+  }
+  footer a { color:#ffd400; text-decoration:none; font-weight:700; }
+
+  /* Help icon */
+  .help-float {
+    position:fixed; right:18px; bottom:80px; width:64px; height:64px; border-radius:50%;
+    background:linear-gradient(180deg,#ffd400,#ffcf36); display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 12px 30px rgba(2,9,44,0.18); cursor:pointer; z-index:999;
+  }
+  .help-float img{ width:32px; height:32px; }
+
+  /* small responsive */
+  @media (max-width:880px){
+    .hero { flex-direction:column; align-items:stretch; }
+    .hero-right { width:100%; }
+    .dashboard { padding: 18px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="brand" aria-hidden="false">
+      <div class="logo" aria-hidden="true">TB</div>
+      <div>
+        <div class="title">Truist Bank Credit Union</div>
+        <div style="font-size:12px;opacity:0.85">Secure · Local · Reliable</div>
+      </div>
+    </div>
+
+    <nav class="primary" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="register.html">Register</a>
+      <a href="login.html">Login</a>
+      <a href="#support">Support</a>
+    </nav>
+
+    <div class="cta-group">
+      <a class="btn btn-ghost" href="login.html">Sign in</a>
+      <a class="btn btn-primary" href="register.html">Open an Account</a>
+    </div>
+  </header>
+
+  <!-- Main container -->
+  <main class="container" role="main">
+
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-left">
+        <h1 id="hero-title">Banking with confidence — locally and internationally</h1>
+        <p class="lead">Truist Bank Credit Union offers checking, savings, online banking and fast transfers — all protected with industry-grade security.</p>
+
+        <div class="actions">
+          <a class="btn btn-primary" href="register.html">Get Started</a>
+          <a class="btn btn-ghost" href="dashboard.html">Go to Dashboard</a>
+        </div>
+
+        <div class="news-ticker" id="live-news" aria-live="polite">Loading latest updates…</div>
+      </div>
+
+      <aside class="hero-right" aria-labelledby="quick-transfer">
+        <h3 id="quick-transfer">Quick Transfer (Preview)</h3>
+
+        <div class="mini-field">
+          <label style="font-size:12px;color:#475569">Transfer type</label>
+          <select id="heroTransferType">
+            <option value="local">Local</option>
+            <option value="international">International</option>
+          </select>
+        </div>
+
+        <div class="mini-field">
+          <label style="font-size:12px;color:#475569">Recipient name</label>
+          <input id="heroRecipientName" placeholder="Jane Doe" />
+        </div>
+
+        <div class="mini-field">
+          <label style="font-size:12px;color:#475569">Account number</label>
+          <input id="heroRecipientAccount" placeholder="123456789" />
+        </div>
+
+        <div style="display:flex;gap:8px">
+          <button id="heroPreviewBtn" class="btn btn-primary" style="flex:1">Preview</button>
+          <button id="heroHelpBtn" class="btn btn-ghost" style="flex:1">Help</button>
+        </div>
+
+        <small style="display:block;margin-top:10px;color:#64748b">This preview is for demonstration — full transfers are processed in your secure dashboard.</small>
+      </aside>
+    </section>
+
+    <!-- Feature cards (center) -->
+    <section style="margin-top:22px">
+      <div style="display:flex;justify-content:center">
+        <div style="max-width:980px; width:100%">
+          <div class="features" role="region" aria-label="Services">
+            <article class="feature-card" aria-labelledby="f1">
+              <h4 id="f1">Checking Account</h4>
+              <p>Daily banking for payments, direct deposits, bill pay and debit card access. Flexible options and no monthly fees on qualifying accounts.</p>
+              <a href="dashboard.html" class="btn btn-ghost" style="margin-top:8px">View checking</a>
+            </article>
+
+            <article class="feature-card" aria-labelledby="f2">
+              <h4 id="f2">Savings Account</h4>
+              <p>High-yield savings buckets with automatic transfers to help you reach goals faster. FDIC-insured and secure.</p>
+              <a href="dashboard.html" class="btn btn-ghost" style="margin-top:8px">View savings</a>
+            </article>
+
+            <article class="feature-card" aria-labelledby="f3">
+              <h4 id="f3">Online Banking</h4>
+              <p>Secure online banking — transfer funds, check balances, apply for a debit card, and more. Available 24/7 on desktop & mobile.</p>
+              <a href="dashboard.html" class="btn btn-ghost" style="margin-top:8px">Open online banking</a>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" id="support" role="contentinfo">
+    <div>
+      <strong>Customer Support</strong><br />
+      WhatsApp: <a href="https://wa.me/18623899696" target="_blank" rel="noopener">+1 862-389-9696</a> &nbsp; | &nbsp;
+      Email: <a href="mailto:truistbank542@gmail.com">truistbank542@gmail.com</a>
+    </div>
+    <div style="opacity:0.95">© <span id="year"></span> Truist Bank Credit Union — All rights reserved</div>
+  </footer>
+
+  <!-- Floating help -->
+  <div class="help-float" id="helpIcon" title="Get help">
+    <!-- simple chat bubble icon (svg) -->
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" fill="#072b66"/>
+    </svg>
+  </div>
+
+<script>
+  // small helpers for live-news + welcome alert + quick-transfer preview
+  (function(){
+    // set year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Live news messages
+    const news = [
+      "Now offering free debit cards for new accounts.",
+      "Online banking updates deployed for faster transfers.",
+      "Apply for a savings booster and earn more interest.",
+      "24/7 WhatsApp support available at +1 862-389-9696."
+    ];
+    const newsBox = document.getElementById('live-news');
+    let n = 0;
+    newsBox.textContent = news[n];
+    setInterval(()=> {
+      n = (n+1) % news.length;
+      newsBox.textContent = news[n];
+    }, 5000);
+
+    // Welcome alert if new user registration happened
+    try {
+      const newUser = localStorage.getItem('newUser');
+      if(newUser && !localStorage.getItem('welcomedIndex')) {
+        // polite non-blocking toast (simple)
+        setTimeout(()=> alert(`Welcome to Truist Bank Credit Union, ${newUser}!`), 400);
+        localStorage.setItem('welcomedIndex', '1');
+      }
+    } catch(e){ /* ignore storage errors */ }
+
+    // Quick transfer preview: just a UI preview (safe)
+    document.getElementById('heroPreviewBtn').addEventListener('click', ()=>{
+      const t = document.getElementById('heroTransferType').value;
+      const name = document.getElementById('heroRecipientName').value.trim();
+      const acc = document.getElementById('heroRecipientAccount').value.trim();
+      if(!name || !acc) {
+        return alert("Enter recipient name and account number for preview.");
+      }
+      alert(`Preview: ${t==='local' ? 'Local' : 'International'} transfer to ${name} (acct ${acc}). Full transfer available in dashboard.`);
+    });
+
+    // help icon
+    document.getElementById('helpIcon').addEventListener('click', ()=>{
+      const support = "WhatsApp: +1 862-389-9696\\nEmail: truistbank542@gmail.com";
+      alert("Customer support\\n\\n" + support);
+    });
+
+  })();
+</script>
+
+</body>
+</html> 

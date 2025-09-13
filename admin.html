@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Truist Bank Admin Panel</title>
+<style>
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background: #f0f4f8;
+    margin: 0;
+}
+header {
+    background-color: #002f6c;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+header h1 { font-size: 1.5rem; }
+header button { background-color: #e63946; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; }
+
+.admin-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+}
+
+/* Cards */
+.card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.card h2 { color: #002f6c; margin-bottom: 10px; }
+input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc; }
+button.action-btn { padding: 10px 12px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 5px; color: white; }
+.add-btn { background-color: #2a9d8f; }
+.remove-btn { background-color: #e76f51; }
+.freeze-btn { background-color: #f4a261; }
+.history-btn { background-color: #264653; }
+.email-btn { background-color: #457b9d; }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th, td { padding: 8px; border-bottom:1px solid #ddd; text-align:left; font-size:0.95rem; }
+th { background-color:#e9ecef; }
+button.table-btn { padding: 3px 6px; font-size:0.85rem; margin-right:5px; border:none; border-radius:3px; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Admin Panel - Truist Bank</h1>
+    <button onclick="logout()">Logout</button>
+</header>
+
+<div class="admin-container">
+
+    <!-- Accounts Table -->
+    <div class="card">
+        <h2>All Customer Accounts</h2>
+        <table id="accountsTable">
+            <thead>
+                <tr>
+                    <th>Email/ID</th>
+                    <th>Checking</th>
+                    <th>Savings</th>
+                    <th>Account #</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- Add Funds -->
+    <div class="card">
+        <h2>Add Funds to Customer</h2>
+        <input type="text" id="fundEmail" placeholder="Customer Email / ID">
+        <input type="number" id="fundAmount" placeholder="Amount">
+        <select id="fundType">
+            <option value="checking">Checking</option>
+            <option value="savings">Savings</option>
+        </select>
+        <button class="action-btn add-btn" id="fundCustomerBtn">Add Funds</button>
+    </div>
+
+    <!-- Freeze/Delete Account -->
+    <div class="card">
+        <h2>Freeze / Delete Account</h2>
+        <input type="text" id="accountEmailAction" placeholder="Customer Email / ID">
+        <button class="action-btn freeze-btn" id="freezeAccountBtn">Freeze/Unfreeze</button>
+        <button class="action-btn remove-btn" id="deleteAccountBtn">Delete Account</button>
+    </div>
+
+    <!-- Create Transaction -->
+    <div class="card">
+        <h2>Create Transaction for Customer</h2>
+        <input type="text" id="transEmail" placeholder="Customer Email / ID">
+        <input type="text" id="transDesc" placeholder="Description">
+        <input type="number" id="transAmount" placeholder="Amount">
+        <select id="transType">
+            <option value="credit">Credit</option>
+            <option value="debit">Debit</option>
+        </select>
+        <button class="action-btn history-btn" id="createTransBtn">Create Transaction</button>
+    </div>
+
+    <!-- Receive Customer Email -->
+    <div class="card">
+        <h2>Customer Support Email</h2>
+        <textarea id="customerEmail" placeholder="Customer Message"></textarea>
+        <button class="action-btn email-btn" id="receiveEmailBtn">Receive Email</button>
+        <div id="emailInbox"></div>
+    </div>
+
+</div>
+
+<script>
+// Admin JS
+let accounts = JSON.parse(localStorage.getItem('accounts') || '{}');
+
+function renderAccountsTable(){
+    const tbody = document.querySelector("#accountsTable tbody");
+    tbody.innerHTML = '';
+    Object.keys(accounts).forEach(email=>{
+        const acc = accounts[email];
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${email}</td>
+            <td>$${acc.checking.toFixed(2)}</td>
+            <td>$${acc.savings.toFixed(2)}</td>
+            <td>${acc.accountNumber}</td>
+            <td>${acc.frozen ? 'Frozen':'Active'}</td>
+            <td>
+                <button class="table-btn" style="background:#f4a261;color:white;" onclick="freezeAccount('${email}')">Freeze</button>
+                <button class="table-btn" style="background:#e63946;color:white;" onclick="deleteAccount('${email}')">Delete</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+renderAccountsTable();
+
+// Add Funds
+document.getElementById('fundCustomerBtn').addEventListener('click', ()=>{
+    const email = document.getElementById('fundEmail').value.trim();
+    const amount = parseFloat(document.getElementById('fundAmount').value);
+    const type = document.getElementById('fundType').value;
+    if(!email || isNaN(amount)|| amount<=0) return alert("Enter valid email and amount");
+    if(!accounts[email]) return alert("Customer not found");
+    accounts[email][type]+=amount;
+    accounts[email].transactions.push({ type:'credit', description:`Admin added to ${type}`, amount });
+    localStorage.setItem('accounts', JSON.stringify(accounts));
+    renderAccountsTable();
+    alert(`Added $${amount} to ${email}'s ${type}`);
+});
+
+// Freeze/Unfreeze
+function freezeAccount(email){
+    if(!accounts[email]) return alert("Customer not found");
+    accounts[email].frozen = !accounts[email].frozen;
+    localStorage.setItem('accounts', JSON.stringify(accounts));
+    renderAccountsTable();
+    alert(`Account ${accounts[email].frozen ? 'Frozen':'Unfrozen'}`);
+}
+
+// Delete Account
+function deleteAccount(email){
+    if(!accounts[email]) return alert("Customer not found");
+    if(confirm(`Are you sure you want to delete ${email}?`)){
+        delete accounts[email];
+        localStorage.setItem('accounts', JSON.stringify(accounts));
+        renderAccountsTable();
+        alert("Account deleted successfully");
+    }
+}
+
+// Create Transaction
+document.getElementById('createTransBtn').addEventListener('click', ()=>{
+    const email = document.getElementById('transEmail').value.trim();
+    const desc = document.getElementById('transDesc').value.trim();
+    const amount = parseFloat(document.getElementById('transAmount').value);
+    const type = document.getElementById('transType').value;
+    if(!email || !desc || isNaN(amount)|| amount<=0) return alert("Enter valid info");
+    if(!accounts[email]) return alert("Customer not found");
+    accounts[email].transactions.push({ type, description: desc, amount });
+    localStorage.setItem('accounts', JSON.stringify(accounts));
+    alert("Transaction created successfully");
+});
+
+// Receive Customer Email
+document.getElementById('receiveEmailBtn').addEventListener('click', ()=>{
+    const msg = document.getElementById('customerEmail').value.trim();
+    if(!msg) return alert("Enter a message");
+    const inbox = document.getElementById('emailInbox');
+    const div = document.createElement('div');
+    div.style.padding="5px"; div.style.borderBottom="1px solid #ccc"; div.textContent = msg;
+    inbox.prepend(div);
+    document.getElementById('customerEmail').value='';
+    alert("Email received");
+});
+
+// Logout
+function logout(){
+    alert("Admin logged out");
+    location.reload();
+}
+</script>
+
+</body>
+</html>
